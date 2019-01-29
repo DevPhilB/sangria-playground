@@ -1,6 +1,6 @@
-## Sangria playground
+## Fork of Sangria playground
 
-This is an example of a [GraphQL](https://facebook.github.io/graphql) server written with [Play framework](https://www.playframework.com) and
+This is a fork of an example of a [GraphQL](https://facebook.github.io/graphql) server written with [Play framework](https://www.playframework.com) and
 [Sangria](http://sangria-graphql.org). It also serves as a playground. On the right hand side you can see a textual representation of the GraphQL
 schema which is implemented on the server and that you can query here. On the left hand side
 you can execute a GraphQL queries and see the results of its execution.
@@ -13,10 +13,31 @@ This is just a small demonstration. It really gets interesting when you start to
 pretty easy to do. Since it's a simple Play application, all it takes to start playground locally and start playing with the schema is this:
 
 ```bash
-$ git clone https://github.com/sangria-graphql/sangria-playground.git
+$ git clone https://github.com/DevPhilB/sangria-playground.git
 $ cd sangria-playground
 $ sbt run
 ```
 
 Now you are ready to point your browser to [http://localhost:9000](http://localhost:9000).
 The only prerequisites are [SBT](http://www.scala-sbt.org/download.html) and [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+
+Added some queries and mutations for demonstration.
+```json
+query ListAllHumans {
+  humans {
+    id, name, friends {name}, appearsIn, homePlanet
+  }
+}
+
+mutation AddObiWanKenobiToHumans {
+  createHuman(
+    id: "1005", 
+    name: "Obi-Wan Kenobi",
+    friends: ["1000"],
+    episode: [NEWHOPE, EMPIRE, JEDI],
+    homeplanet: "Tatooine"
+  ) {
+    id, name, friends {name}, appearsIn, homePlanet
+  }
+}
+```
