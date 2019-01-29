@@ -22,7 +22,7 @@ Now you are ready to point your browser to [http://localhost:9000](http://localh
 The only prerequisites are [SBT](http://www.scala-sbt.org/download.html) and [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
 
 Added some queries and mutations for demonstration.
-```json
+```graphql
 query ListAllHumans {
   humans {
     id, name, friends {name}, appearsIn, homePlanet
