@@ -101,22 +101,38 @@ object SchemaDefinition {
 
   val ID = Argument("id", StringType, description = "id of the character")
 
-  val EpisodeArg = Argument("episode", OptionInputType(EpisodeEnum),
-    description = "If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode.")
+  val NameArg = Argument("name", OptionInputType(StringType), description = "name of the human")
+
+  val FriendsArgs = Argument("friends", ListInputType(StringType), description = "friends of the human")
+
+  val EpisodeArg = Argument("episode", ListInputType(EpisodeEnum),
+    description = "Human plays in this episodes")
+
+  val HomePlanetArg = Argument("homeplanet", OptionInputType(StringType), description = "Home planet of the human")
 
   val Query = ObjectType(
     "Query", fields[CharacterRepo, Unit](
-      Field("hero", Character,
-        arguments = EpisodeArg :: Nil,
-        deprecationReason = Some("Use `human` or `droid` fields instead"),
-        resolve = (ctx) ⇒ ctx.ctx.getHero(ctx.arg(EpisodeArg))),
+      Field("humans", ListType(Human),
+        arguments = Nil,
+        resolve = ctx ⇒ ctx.ctx.getHumans),
       Field("human", OptionType(Human),
         arguments = ID :: Nil,
         resolve = ctx ⇒ ctx.ctx.getHuman(ctx arg ID)),
-      Field("droid", Droid,
+      Field("droid", OptionType(Droid),
         arguments = ID :: Nil,
-        resolve = Projector((ctx, f) ⇒ ctx.ctx.getDroid(ctx arg ID).get))
+        resolve = ctx ⇒ ctx.ctx.getDroid(ctx arg ID))
     ))
 
-  val StarWarsSchema = Schema(Query)
+  val Mutation = ObjectType(
+    "Mutation", fields[CharacterRepo, Unit](
+      Field("createHuman", Human,
+        arguments = ID :: NameArg :: FriendsArgs :: EpisodeArg :: HomePlanetArg :: Nil,
+        resolve = ctx ⇒ ctx.ctx.createHuman(ctx.arg(ID), ctx.arg(NameArg), ctx.arg(FriendsArgs).toList,
+          ctx.arg(EpisodeArg).toList, ctx.arg(HomePlanetArg))),
+      Field("deleteHuman", ListType(Human),
+        arguments = ID :: Nil,
+        resolve = ctx ⇒ ctx.ctx.deleteHuman(ctx.arg(ID)))
+    ))
+
+  val StarWarsSchema = Schema(Query, Some(Mutation))
 }

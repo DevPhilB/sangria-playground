@@ -1,6 +1,7 @@
 package models
 
 object Episode extends Enumeration {
+  // Movies 4-6
   val NEWHOPE, EMPIRE, JEDI = Value
 }
 
@@ -28,20 +29,31 @@ case class Droid(
 class CharacterRepo {
   import models.CharacterRepo._
 
-  def getHero(episode: Option[Episode.Value]) =
-    episode flatMap (_ ⇒ getHuman("1000")) getOrElse droids.last
+  def getHumans: List[Human] = humans
 
   def getHuman(id: String): Option[Human] = humans.find(c ⇒ c.id == id)
 
   def getDroid(id: String): Option[Droid] = droids.find(c ⇒ c.id == id)
+
+  def createHuman(id: String, name: Option[String], friends: List[String],
+                  appearsIn: List[Episode.Value], homePlanet: Option[String]): Human = {
+    val newHuman = Human(id, name, friends, appearsIn, homePlanet)
+    humans = newHuman :: humans
+    newHuman
+  }
+
+  def deleteHuman(id: String): List[Human] = {
+    humans = humans.filter(c => c.id != id)
+    humans
+  }
 }
 
 object CharacterRepo {
-  val humans = List(
+  var humans = List(
     Human(
       id = "1000",
       name = Some("Luke Skywalker"),
-      friends = List("1002", "1003", "2000", "2001"),
+      friends = List("1002", "1003", "1005", "2000", "2001"),
       appearsIn = List(Episode.NEWHOPE, Episode.EMPIRE, Episode.JEDI),
       homePlanet = Some("Tatooine")),
     Human(
@@ -70,7 +82,7 @@ object CharacterRepo {
       homePlanet = None)
   )
 
-  val droids = List(
+  var droids = List(
     Droid(
       id = "2000",
       name = Some("C-3PO"),
