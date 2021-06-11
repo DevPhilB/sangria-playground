@@ -31,21 +31,9 @@ class CharacterRepo {
 
   def getHumans: List[Human] = humans
 
-  def getHuman(id: String): Option[Human] = humans.find(c ⇒ c.id == id)
+  def getHuman(id: String): Option[Human] = humans.find(c => c.id == id)
 
-  def getDroid(id: String): Option[Droid] = droids.find(c ⇒ c.id == id)
-
-  def createHuman(id: String, name: Option[String], friends: List[String],
-                  appearsIn: List[Episode.Value], homePlanet: Option[String]): Human = {
-    val newHuman = Human(id, name, friends, appearsIn, homePlanet)
-    humans = newHuman :: humans
-    newHuman
-  }
-
-  def deleteHuman(id: String): List[Human] = {
-    humans = humans.filter(c => c.id != id)
-    humans
-  }
+  def getDroid(id: String): Option[Droid] = droids.find(c => c.id == id)
 }
 
 object CharacterRepo {
